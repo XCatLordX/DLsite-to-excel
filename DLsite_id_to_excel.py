@@ -5,20 +5,38 @@ import requests
 from io import BytesIO
 from openpyxl import Workbook  # 确保导入 Workbook
 from openpyxl.drawing.image import Image
+import sys
 
 async def f(a):
     async with DlsiteAPI() as api:
         return await api.get_work(a)
         
 data_list = []  # 假设有多个数据对象
-    
-while True:
-    data_id = str(input("(輸入空字串即結束）請輸入作品id: "))
-    if data_id == "":
-        break
-    else:
-        raw_data = asyncio.run(f(data_id))
+
+print("一次性輸入作品id（用空格分隔）請輸入：1")
+print("分次輸入作品id請輸入：2")
+Mode = input()
+
+if Mode == '1':
+    print("請一次性輸入作品id（用空格分隔）： ")
+    data_id = input().split()
+    for i in range(0,len(data_id)):
+        raw_data = asyncio.run(f(data_id[i]))
         data_list.append(raw_data)
+    
+elif Mode == '2':
+    while True:
+        data_id = str(input("(輸入空字串即結束）請輸入作品id: "))
+        if data_id == "":
+            break
+        else:
+            raw_data = asyncio.run(f(data_id))
+            data_list.append(raw_data)
+
+else:
+    print("無效輸入")
+    sys.exit(0) #end program
+
 #print(data_list)
 
 
